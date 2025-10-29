@@ -1,5 +1,5 @@
 @import "tailwindcss";
-
+@plugin "daisyui";
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -23,4 +23,48 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Mobile tap targets */
+.btn.btn-lg { min-height: 3.25rem; }
+.btn { min-width: 3.25rem; }
+
+/* Animations */
+@keyframes countdown-pulse {
+  0%, 100% { transform: scale(1); filter: brightness(1); }
+  50% { transform: scale(1.06); filter: brightness(1.1); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
+}
+
+@keyframes slide-in-br {
+  from { opacity: 0; transform: translate(20px, 20px); }
+  to { opacity: 1; transform: translate(0, 0); }
+}
+
+@keyframes fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+.anim-countdown {
+  animation: countdown-pulse 0.6s ease-in-out infinite;
+}
+
+.anim-shake {
+  animation: shake 400ms ease-in-out;
+}
+
+.anim-slide-in-br {
+  animation: slide-in-br 220ms ease-out both;
+}
+
+.anim-fade-out {
+  animation: fade-out 300ms ease-in forwards;
 }

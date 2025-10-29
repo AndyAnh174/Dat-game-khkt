@@ -1,0 +1,18 @@
+---
+globs: *.ts,*.tsx
+description: Hướng dẫn phát hiện ngôn ngữ tiêu cực/tục tĩu phía client bằng regex và danh sách từ
+---
+# Phát hiện ngôn ngữ tiêu cực phía client
+
+- Tạo một module nhỏ cung cấp: `isNegative(text: string): { matched: boolean; hits: string[] }`.
+- Dùng danh sách từ khóa tiếng Việt phổ biến (không nêu ra đầy đủ trong rule), xử lý biến thể viết tắt (vd: "vc", "vcl"), và không phân biệt hoa/thường.
+- Xem xét bỏ dấu: chuẩn hóa chuỗi đầu vào thành dạng không dấu để so khớp ổn định.
+- Tránh regex quá tham lam; nhóm theo biên từ (word boundaries) hoặc phân tách bằng whitespace/punctuations.
+- Trả về `hits` để thống kê và để UI quyết định cường độ can thiệp.
+
+## Gợi ý tích hợp
+
+- Gọi `isNegative` trong onInput để phản hồi gần như thời gian thực.
+- Debounce 80–120ms để giảm tải khi gõ nhanh.
+- Dựa trên số lượng/độ nặng của `hits`, chọn câu nhắc phù hợp từ chatbot.
+

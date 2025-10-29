@@ -1,0 +1,18 @@
+---
+globs: *.ts,*.tsx
+description: Mô phỏng WebSocket/stream phản hồi của chatbot không cần backend
+---
+# Giả lập WebSocket/stream cho chatbot
+
+- Tạo một hook `useFakeStream` nhận đầu vào: `prompt: string`, `enabled: boolean`, `onChunk?: (text) => void`, `onDone?: () => void`.
+- Khi `enabled` bật, mô phỏng phát chunk theo thời gian: sử dụng `setInterval` phát 2–5 từ mỗi 100–200ms, dừng sau khi hết nội dung.
+- Nội dung có thể được tạo từ template câu động viên, chèn tên người chơi/emoji.
+- Hỗ trợ hủy: trả về `stop()` để dừng stream khi người dùng gõ mới hoặc đóng chatbot.
+- Tránh memory leak: dọn dẹp interval trong `useEffect` cleanup.
+
+## Tích hợp với UI
+
+- Khi phát hiện ngôn ngữ tiêu cực, bật `enabled` và đặt `prompt` là nội dung gần nhất người dùng gõ để ngữ cảnh hóa thông điệp.
+- Hiển thị chunk ngay khi đến (aria-live="polite").
+- Đếm `botInterventions++` mỗi lần stream mới bắt đầu.
+

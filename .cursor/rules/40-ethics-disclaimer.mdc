@@ -1,0 +1,10 @@
+---
+globs: app/**/*.tsx
+description: Chèn thông báo đạo đức và quyền riêng tư vào giao diện
+---
+# Thông báo đạo đức & quyền riêng tư
+
+- Hiển thị một banner/footnote cố định, nội dung: “Đây là mô phỏng nghiên cứu hành vi, không lưu dữ liệu cá nhân.”
+- Vị trí khuyến nghị: footer của [app/page.tsx](mdc:app/page.tsx) hoặc cạnh chatbot.
+- Cho phép người dùng đóng banner, nhưng có nút/icon để mở lại trong UI (ví dụ icon info bên cạnh chatbot).
+

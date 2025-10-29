@@ -1,0 +1,24 @@
+---
+globs: app/**/*.tsx,*.tsx,*.css
+description: UI hành vi cho mini-game, hộp bình luận, chatbot góc màn hình và thống kê
+---
+# Hành vi giao diện & luồng người dùng
+
+- Mini-game hiển thị trong [app/page.tsx](mdc:app/page.tsx). Sau khi thua, chuyển sang trạng thái "bình luận" trong cùng trang (không cần route mới).
+- Hộp bình luận: `textarea` hoặc `contenteditable` nhận input liên tục. Ngay khi phát hiện từ tiêu cực (client-side), hiển thị chatbot nổi ở góc phải dưới.
+- Chatbot nổi: một bubble/overlay fixed-position, có trạng thái mở/thu gọn, auto-appear khi phát hiện tiêu cực, auto-hide sau 6–10s nếu không có tiêu cực mới.
+- Phản hồi chatbot nên là chuỗi gợi ý nhẹ nhàng, có random chọn từ một tập câu động viên.
+- Thống kê nhỏ tuỳ chọn: hiển thị dưới khu vực game hoặc trong một panel phụ: tổng token/từ, số từ tiêu cực, số lần chatbot can thiệp.
+
+## Chi tiết triển khai UI
+
+- Dùng state máy trạng thái đơn giản: `playing` → `lost` → `commenting`. Trong `commenting`, theo dõi input để điều khiển chatbot.
+- Dùng CSS thuần hoặc Tailwind. Nếu dùng CSS thuần, đặt style vào [app/globals.css](mdc:app/globals.css). Nếu dùng Tailwind, tuân thủ cấu hình trong [postcss.config.mjs](mdc:postcss.config.mjs).
+- Đảm bảo component chatbot không chặn thao tác gõ: pointer-events chỉ trên phần cần thiết; vùng nền trong suốt.
+- Ưu tiên accessibility: aria-live cho stream phản hồi, aria-label cho ô gõ.
+
+## Trạng thái và đo lường
+
+- Biến đếm: `totalWords`, `negativeWords`, `botInterventions`.
+- Gắn hook phân tích text (xem rule về phát hiện tiêu cực) vào onChange/onInput để cập nhật đếm và trigger chatbot.
+
