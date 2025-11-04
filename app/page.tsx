@@ -61,16 +61,27 @@ export default function Home() {
   // Countdown timer
   useEffect(() => {
     if (countdown <= 0) {
-      if (countdown === 0 && gameState === "playing") {
-        setGameStarted(true);
+      // Only start game if countdown reached 0 after being set (meaning user clicked start)
+      if (countdown === 0 && gameState === "playing" && gameStarted === false) {
+        // Check if countdown was active (was > 0 before)
+        // We'll track this differently - only start if we're transitioning from countdown > 0
+        return;
       }
       return;
     }
+    // Countdown is active, decrement
     const timer = window.setTimeout(() => {
-      setCountdown((prev: number) => prev - 1);
+      setCountdown((prev: number) => {
+        if (prev === 1) {
+          // Countdown finished, start game
+          setGameStarted(true);
+          return 0;
+        }
+        return prev - 1;
+      });
     }, 1000);
     return () => window.clearTimeout(timer);
-  }, [countdown, gameState]);
+  }, [countdown, gameState, gameStarted]);
 
   const handleStartGame = () => {
     setCountdown(5);
