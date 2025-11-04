@@ -17,7 +17,7 @@ function placeFree(width: number, height: number, blocked: Cell[]): Cell {
   return { x: 0, y: 0 };
 }
 
-export function SnakeGame({ onLose, onWin, gridSize = 15 }: { onLose: () => void; onWin?: () => void; gridSize?: number }) {
+export function SnakeGame({ started, onLose, onWin, onReset, gridSize = 15 }: { started: boolean; onLose: () => void; onWin?: () => void; onReset?: () => void; gridSize?: number }) {
   const width = gridSize;
   const height = gridSize;
 
@@ -33,7 +33,7 @@ export function SnakeGame({ onLose, onWin, gridSize = 15 }: { onLose: () => void
   const [food, setFood] = useState<Cell>(() => placeFree(width, height, []));
   const [score, setScore] = useState(0);
   const [obstacles, setObstacles] = useState<Cell[]>([]);
-  const [running, setRunning] = useState(true);
+  const [running, setRunning] = useState(false);
 
   const speedMs = useMemo(() => {
     // Exponential acceleration: quickly ramps up and guarantees difficulty
@@ -82,10 +82,19 @@ export function SnakeGame({ onLose, onWin, gridSize = 15 }: { onLose: () => void
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
+  // Start game when started prop becomes true
+  useEffect(() => {
+    if (started) {
+      setRunning(true);
+    } else {
+      setRunning(false);
+    }
+  }, [started]);
+
   // Tick loop using setInterval, restart when speed changes
   const intervalRef = useRef<number | null>(null);
   useEffect(() => {
-    if (!running) return;
+    if (!running || !started) return;
     if (intervalRef.current) window.clearInterval(intervalRef.current);
     intervalRef.current = window.setInterval(() => {
       setSnake(prev => {
@@ -160,7 +169,7 @@ export function SnakeGame({ onLose, onWin, gridSize = 15 }: { onLose: () => void
       if (intervalRef.current) window.clearInterval(intervalRef.current);
       intervalRef.current = null;
     };
-  }, [speedMs, running, width, height, onLose, onWin, obstacles]);
+  }, [speedMs, running, started, width, height, onLose, onWin, obstacles]);
 
   const reset = () => {
     setSnake(() => {
@@ -173,7 +182,10 @@ export function SnakeGame({ onLose, onWin, gridSize = 15 }: { onLose: () => void
     setFood(placeFree(width, height, []));
     setScore(0);
     setObstacles([]);
-    setRunning(true);
+    setRunning(false);
+    if (onReset) {
+      onReset();
+    }
   };
 
   // Mobile tap controls
